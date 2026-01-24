@@ -40,4 +40,5 @@ def attempt(bulls=None, cows=None, guessed_number_dict=None):
     attempt = 0
     if not bulls and cows and guessed_number_dict:
         attempt = generate_number()
+        attempt_list = list(attempt)
 
