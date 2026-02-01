@@ -43,4 +43,3 @@ def analyze_cows(secret_number, guess_number, bulls_number):
 
 def generate_guess(cows_number, bulls_number, guess_list):
     attempt = len(guess_list) + 1
-
