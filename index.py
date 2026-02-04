@@ -6,6 +6,8 @@ load_dotenv()
 
 YANDEX_FOLDER_ID = os.getenv("YANDEX_FOLDER_ID")
 YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")
+BASE_URL = os.getenv("API_BASE_URL")
+MODEL = os.getenv("MODEL")
 
 # Prompt from AI Studio
 PLAYER_SYSTEM_PROMPT = """Ты играешь в игру "Быки и коровы".
@@ -103,12 +105,10 @@ PLAYER_SYSTEM_PROMPT = """Ты играешь в игру "Быки и коро�
 - Внимательно читай свою роль в каждом сообщении
 - При подсчёте быков и коров будь точен"""
 
-# Model from AI Studio
-MODEL = "yandexgpt-lite/rc"
 
 client = openai.OpenAI(
     api_key=YANDEX_API_KEY,
-    base_url="https://llm.api.cloud.yandex.net/v1",
+    base_url=BASE_URL,
     project=YANDEX_FOLDER_ID,
 )
 
