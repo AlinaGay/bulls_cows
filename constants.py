@@ -10,3 +10,4 @@ YANDEX_API_KEY = os.getenv("YANDEX_API_KEY")
 BASE_URL = os.getenv("API_BASE_URL")
 MODEL = os.getenv("MODEL")
 MAX_ATTEMPTS = 10
+DIGITS_OF_NUMBER = 4
