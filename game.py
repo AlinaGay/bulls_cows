@@ -18,8 +18,8 @@ class Game:
         self.codemaker = codemaker
         self.codebreaker = codebreaker
         self.max_attempts = max_attempts
-        self.history = []
-        self.secret = None
+        self.history: list[dict] = []
+        self.secret: str | None = None
 
     def play(self) -> dict:
         """Play a round of the game."""
@@ -40,7 +40,8 @@ class Game:
                 continue
 
             bulls, cows = self.codemaker.count_bulls_cows(self.secret, guess)
-            engine_bulls, engine_cows = calculate_bulls_cows(self.secret, guess)
+            engine_bulls, engine_cows = calculate_bulls_cows(
+                self.secret, guess)
             if bulls != engine_bulls or cows != engine_cows:
                 print(f"Агент ошибся: {bulls}Б {cows}К")
                 print(f"   Правильно:    {engine_bulls}Б {engine_cows}К")
