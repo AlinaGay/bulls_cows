@@ -1,4 +1,5 @@
 # player.py
+"""Player class for Bulls and Cows game."""
 
 from client import client
 from config import MODEL, YANDEX_FOLDER_ID
@@ -13,7 +14,7 @@ class Player:
         self.name = name
         self.system_prompt = system_prompt
 
-    def send_message(self, message: str) -> str:
+    def send_message(self, message: str) -> str | None:
         """Send message to agent."""
         response = client.chat.completions.create(
             model=f"gpt://{YANDEX_FOLDER_ID}/{MODEL}",
@@ -31,16 +32,19 @@ class Player:
         response = self.send_message(
             "Роль: ЗАГАДЫВАЮЩИЙ — ЗАГАДАТЬ ЧИСЛО\n\nЗагадай 4-значное число."
         )
+        if not response:
+            raise ValueError("Empty response from agent")
         data = parse_response(response)
         return data["number"]
 
-    def make_guess(self, history: list = None) -> str:
+    def make_guess(self, history: list | None = None) -> str:
         """Generate guess number."""
         if not history:
             history_text = "Это твоя первая попытка."
         else:
             lines = [
-                f"Ход {h['attempt']}: {h['guess']} -> {h['bulls']}быков {h['cows']}коров"
+                f"Ход {h['attempt']}: {h['guess']} -> "
+                f"{h['bulls']}быков {h['cows']}коров"
                 for h in history
             ]
             history_text = "История: \n" + "\n".join(lines)
@@ -48,6 +52,8 @@ class Player:
         response = self.send_message(
             f"Роль: ОТГАДЫВАЮЩИЙ\n\n{history_text}\n\nСделай попытку."
         )
+        if not response:
+            raise ValueError("Empty response from agent")
         data = parse_response(response)
         return data["number"]
 
@@ -58,5 +64,7 @@ class Player:
             f"Сравни {secret} и {guess}."
             "Посчитай быков и коров."
         )
+        if not response:
+            raise ValueError("Empty response from agent")
         data = parse_response(response)
         return data["bulls"], data['cows']
