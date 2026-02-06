@@ -1,4 +1,6 @@
 # client.py
+"""OpenAI client configured for Yandex AI Studio API."""
+
 import openai
 
 from config import (

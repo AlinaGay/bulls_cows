@@ -1,8 +1,11 @@
 # utils.py
+"""Utility functions for Bulls and Cows game."""
+
 import json
 import random
+import re
 
-from constants import DIGITS_OF_NUMBER
+from config import DIGITS_OF_NUMBER
 
 
 def is_valid_number(number: str) -> bool:
@@ -36,7 +39,23 @@ def calculate_bulls_cows(secret: str, guess: str) -> tuple[int, int]:
 def parse_response(response_text: str) -> dict:
     """Parse JSON-answer of agent."""
     text = response_text.strip()
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1]
-        text = text.rsplit("```", 1)[0]
-    return json.loads(text)
+    if "```" in text:
+        match = re.search(r'```(?:json)?\s*(.*?)\s*```', text, re.DOTALL)
+        if match:
+            text = match.group(1)
+
+    match = re.search(r'\{[^{}]*\}', text)
+    if match:
+        text = match.group(0)
+
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as error:
+        print(f"Ошибка парсинга JSON: {error}")
+        print(f"   Ответ агента: {response_text[:100]}...")
+        return {
+            "action": "error",
+            "number": "0000",
+            "bulls": 0,
+            "cows": 0
+        }

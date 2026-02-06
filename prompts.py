@@ -1,4 +1,5 @@
 # prompts.py
+"""System prompts and strategies for AI agents."""
 
 BASE_PROMPT = """Ты играешь в игру "Быки и коровы".
 В каждом сообщении тебе будет указана твоя текущая роль.
