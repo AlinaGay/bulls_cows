@@ -44,8 +44,8 @@ class Game:
             engine_bulls, engine_cows = calculate_bulls_cows(
                 self.secret, guess)
             if bulls != engine_bulls or cows != engine_cows:
-                print(f"Агент ошибся: {bulls}Б {cows}К")
-                print(f"   Правильно:    {engine_bulls}Б {engine_cows}К")
+                print(f"Агент ошибся: {bulls} Б {cows} К")
+                print(f"Правильно: {engine_bulls} Б {engine_cows} К")
                 bulls, cows = engine_bulls, engine_cows
 
             self.history.append({
@@ -55,7 +55,7 @@ class Game:
                 "cows": cows
             })
 
-            print(f"   Ход {attempt}: {guess} → {bulls}Б {cows}К")
+            print(f"Ход {attempt}: {guess} → {bulls} Б {cows} К)")
 
             if bulls == 4:
                 print(f"\n{self.codebreaker.name} угадал за {attempt} ходов!")

@@ -1,45 +1,34 @@
-from operator import attrgetter
-import random
+# main.py
+"""Entry point for Bulls and Cows AI game."""
+
+from game import Game
+from player import Player
+from prompts import PLAYER_1_PROMPT, PLAYER_2_PROMPT
 
 
-N = 4
+def main():
+    """Run the Bulls and Cows game between two AI agents."""
+    player_1 = Player("Player_1", PLAYER_1_PROMPT)
+    player_2 = Player("Player_2", PLAYER_2_PROMPT)
 
-def generate_number():
-    return random.randit(1000, 9999)
+    print("=" * 50)
+    print("        БЫКИ И КОРОВЫ: AI vs AI")
+    print("=" * 50)
 
+    print("\n РАУНД 1: Player_1 загадывает, Player_2 угадывает")
+    game_1 = Game(codemaker=player_1, codebreaker=player_2)
+    result_1 = game_1.play()
 
-def add_to_context(
-    attempt=1,
-    guess_number=0,
-    cows_number=0,
-    bulls_number=0,
-    guess_list=[]
-):
-    attempt_dict = {
-        "Ход": {attempt},
-        "Попытка": {guess_number},
-        "Быки": {bulls_number},
-        "Коровы": {cows_number}
-    }
-    return guess_list + attempt_dict
+    print("\n РАУНД 2: Player_2 загадывает, Player_1 угадывает")
+    game_2 = Game(codemaker=player_2, codebreaker=player_1)
+    result_2 = game_2.play()
 
-
-def analyze_bulls(secret_number, guess_number):
-    bulls_dict = {
-        i: x
-        for i, (x, y) in (
-            enumerate(zip(str(secret_number), str(guess_number))))
-        if x == y}
-
-    return len(bulls_dict)
+    print("\n" + "=" * 50)
+    print("                 ИТОГИ")
+    print("=" * 50)
+    print(f"Раунд 1: {result_1['attempts']} ходов")
+    print(f"Раунд 2: {result_2['attempts']} ходов")
 
 
-def analyze_cows(secret_number, guess_number, bulls_number):
-    cows_bulls_number = sum(
-        1 for num in str(guess_number) if num in str(secret_number))
-
-    return cows_bulls_number - bulls_number
-
-
-def generate_guess(cows_number, bulls_number, guess_list):
-    attempt = len(guess_list) + 1
+if __name__ == "__main__":
+    main()
