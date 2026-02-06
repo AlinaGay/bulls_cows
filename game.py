@@ -1,4 +1,5 @@
 # game.py
+"""Game module for Bulls and Cows game."""
 
 from config import MAX_ATTEMPTS
 from player import Player
