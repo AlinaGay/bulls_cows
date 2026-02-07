@@ -40,13 +40,18 @@ class Game:
                 print(f"Ход {attempt}: невалидная попытка {guess}, пропуск")
                 continue
 
-            bulls, cows = self.codemaker.count_bulls_cows(self.secret, guess)
+            agent_bulls, agent_cows = self.codemaker.count_bulls_cows(
+                self.secret, guess
+            )
             engine_bulls, engine_cows = calculate_bulls_cows(
-                self.secret, guess)
-            if bulls != engine_bulls or cows != engine_cows:
-                print(f"Агент ошибся: {bulls} Б {cows} К")
-                print(f"Правильно: {engine_bulls} Б {engine_cows} К")
-                bulls, cows = engine_bulls, engine_cows
+                self.secret, guess
+            )
+
+            if agent_bulls != engine_bulls or agent_cows != engine_cows:
+                print(f"   Агент ошибся: {agent_bulls}Б {agent_cows}К → "
+                      f"Исправлено: {engine_bulls}Б {engine_cows}К")
+
+            bulls, cows = engine_bulls, engine_cows
 
             self.history.append({
                 "attempt": attempt,
