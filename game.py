@@ -2,6 +2,7 @@
 """Game module for Bulls and Cows game."""
 
 from config import MAX_ATTEMPTS
+from loguru import logger
 from player import Player
 from utils import calculate_bulls_cows, generate_number, is_valid_number
 
@@ -27,17 +28,18 @@ class Game:
         self.secret = self.codemaker.make_secret()
 
         if not is_valid_number(self.secret):
-            print(f"Агент загадал невалидное число: {self.secret}")
+            logger.warning(f"Агент загадал невалидное число: {self.secret}")
             self.secret = generate_number()
-            print(f"   Заменено на: {self.secret}")
+            logger.info(f"Заменено на: {self.secret}")
 
-        print(f"\n {self.codemaker.name} загадал число (скрыто)")
+        logger.info(f"{self.codemaker.name} загадал число: {self.secret}")
 
         for attempt in range(1, self.max_attempts + 1):
             guess = self.codebreaker.make_guess(self.history)
+            logger.debug(f"Попытка {attempt}: {guess}")
 
             if not is_valid_number(guess):
-                print(f"Ход {attempt}: невалидная попытка {guess}, пропуск")
+                logger.warning(f"Невалидная попытка: {guess}, пропуск")
                 continue
 
             agent_bulls, agent_cows = self.codemaker.count_bulls_cows(
@@ -48,8 +50,8 @@ class Game:
             )
 
             if agent_bulls != engine_bulls or agent_cows != engine_cows:
-                print(f"   Агент ошибся: {agent_bulls}Б {agent_cows}К → "
-                      f"Исправлено: {engine_bulls}Б {engine_cows}К")
+                logger.warning(f"Агент ошибся: {agent_bulls}Б {agent_cows}К → "
+                               f"Исправлено: {engine_bulls}Б {engine_cows}К")
 
             bulls, cows = engine_bulls, engine_cows
 
@@ -60,10 +62,11 @@ class Game:
                 "cows": cows
             })
 
-            print(f"Ход {attempt}: {guess} → {bulls} Б {cows} К)")
+            logger.info(f"Ход {attempt}: {guess} → {bulls}Б {cows}К")
 
             if bulls == 4:
-                print(f"\n{self.codebreaker.name} угадал за {attempt} ходов!")
+                logger.success(f"{self.codebreaker.name} "
+                               f"угадал за {attempt} ходов!")
                 return {
                     "winner": self.codebreaker.name,
                     "attempts": attempt,
@@ -71,8 +74,8 @@ class Game:
                     "history": self.history
                 }
 
-        print(f"\n{self.codebreaker.name} не угадал."
-              f"Число было: {self.secret}")
+        logger.error(f"{self.codebreaker.name} не угадал. "
+                     f"Число было: {self.secret}")
 
         return {
                 "winner": None,

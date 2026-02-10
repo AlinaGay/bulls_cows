@@ -2,6 +2,7 @@
 """Player class for Bulls and Cows game."""
 
 from client import client
+from loguru import logger
 from config import MODEL, YANDEX_FOLDER_ID
 from utils import parse_response
 
@@ -25,7 +26,8 @@ class Player:
             temperature=0.5,
             max_tokens=100
         )
-        return response.choices[0].message.content
+
+        return response.choices[0].message.content or ""
 
     def make_secret(self) -> str:
         """Generate secret number."""
