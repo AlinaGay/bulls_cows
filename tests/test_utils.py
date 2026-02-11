@@ -1,8 +1,6 @@
 # tests/test_utils.py
 """Unit tests for utility functions."""
 
-from contextlib import nullcontext
-import numbers
 import pytest
 
 from utils import (
@@ -92,6 +90,7 @@ class TestCalculateBullsCows:
         assert calculate_bulls_cows("1023", "3210") == (0, 4)
         assert calculate_bulls_cows("9012", "2109") == (0, 4)
 
+
 class TestGenerateNumber:
     """Tests for generate_number function."""
 
@@ -123,3 +122,56 @@ class TestGenerateNumber:
             number = generate_number()
             assert len(set(number)) == 4
 
+
+class TestParseResponse:
+    """Tests for parse_response function."""
+
+    def test_valid_json(self):
+        """Valid JSON should be parsed correctly."""
+        response = ('{"action": "guess", '
+                    '"number": "1234", "bulls": 0, "cows": 0}')
+        result = parse_response(response)
+        assert result["action"] == "guess"
+        assert result["number"] == "1234"
+
+    def test_json_in_markdown(self):
+        """JSON wrapped in markdown code blocks."""
+        response = ('```json\n{"action": "guess", '
+                    '"number": "5678", "bulls": 1, "cows": 2}\n```')
+        result = parse_response(response)
+        assert result["number"] == "5678"
+        assert result["bulls"] == 1
+        assert result["cows"] == 2
+
+    def test_json_in_markdown_no_language(self):
+        """JSON in markdown without language specification."""
+        response = ('```\n{"action": "make", '
+                    '"number": "9012", "bulls": 0, "cows": 0}\n```')
+        result = parse_response(response)
+        assert result["number"] == "9012"
+
+    def test_json_with_extra_text(self):
+        """JSON with surrounding text."""
+        response = ('Here is my guess: {"action": "guess", '
+                    '"number": "1234", "bulls": 0, "cows": 0} Good luck!')
+        result = parse_response(response)
+        assert result["number"] == "1234"
+
+    def test_invalid_json_returns_default(self):
+        """Invalid JSON should return default values."""
+        response = "This is not JSON at all"
+        result = parse_response(response)
+        assert result["action"] == "error"
+        assert result["number"] == "0000"
+
+    def test_empty_response(self):
+        """Empty response should return default values."""
+        result = parse_response("")
+        assert result["action"] == "error"
+
+    def test_whitespace_handling(self):
+        """JSON with extra whitespace."""
+        response = ('  \n  {"action": "guess", '
+                    '"number": "1234", "bulls": 0, "cows": 0}  \n  ')
+        result = parse_response(response)
+        assert result["number"] == "1234"
