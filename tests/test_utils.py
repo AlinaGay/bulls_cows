@@ -1,6 +1,8 @@
 # tests/test_utils.py
 """Unit tests for utility functions."""
 
+from contextlib import nullcontext
+import numbers
 import pytest
 
 from utils import (
@@ -89,3 +91,35 @@ class TestCalculateBullsCows:
         """Edge cases with zeros."""
         assert calculate_bulls_cows("1023", "3210") == (0, 4)
         assert calculate_bulls_cows("9012", "2109") == (0, 4)
+
+class TestGenerateNumber:
+    """Tests for generate_number function."""
+
+    def test_returns_valid_number(self):
+        """Generated number should be valid."""
+        for _ in range(100):
+            number = generate_number()
+            assert is_valid_number(number), f"Invalid umber generate: {number}"
+
+    def test_returnstring(self):
+        """Generated number should be a string."""
+        number = generate_number()
+        assert isinstance(number, str)
+
+    def test_correct_length(self):
+        """Generated number should have 4 digits."""
+        number = generate_number()
+        assert len(number) == 4
+
+    def test_no_leading_zero(self):
+        """Generated number should not start with 0."""
+        for _ in range(100):
+            number = generate_number()
+            assert number[0] != "0"
+
+    def test_unique_digits(self):
+        """Generated number should have unique digits."""
+        for _ in range(100):
+            number = generate_number()
+            assert len(set(number)) == 4
+
