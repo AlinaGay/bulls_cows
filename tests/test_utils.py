@@ -50,3 +50,42 @@ class TestIsValidNumber:
         assert is_valid_number("12ab") is False
         assert is_valid_number("12.4") is False
         assert is_valid_number("12 4") is False
+
+
+class TestCalculateBullsCows:
+    """Tests for calculate_bulls_cows function."""
+
+    def test_bulls_cows(self):
+        """Exact match should return 4 bulls, 0 cows."""
+        assert calculate_bulls_cows("1234", "1234") == (4, 0)
+        assert calculate_bulls_cows("5678", "5678") == (4, 0)
+
+    def test_no_match(self):
+        """No matching digits should return 0 bulls, 0 cows."""
+        assert calculate_bulls_cows("1234", "5678") == (0, 0)
+        assert calculate_bulls_cows("1234", "9876") == (0, 0)
+
+    def test_all_cows(self):
+        """All digits present but wrong positions."""
+        assert calculate_bulls_cows("1234", "4321") == (0, 4)
+        assert calculate_bulls_cows("1234", "2143") == (0, 4)
+
+    def test_mixed_bulls_cows(self):
+        """Mix of bulls and cows."""
+        assert calculate_bulls_cows("1234", "1243") == (2, 2)
+        assert calculate_bulls_cows("1234", "1325") == (1, 2)
+        assert calculate_bulls_cows("1234", "1567") == (1, 0)
+
+    def test_one_bull(self):
+        """One digit in correct position."""
+        assert calculate_bulls_cows("1234", "1567") == (1, 0)
+        assert calculate_bulls_cows("1234", "5234") == (3, 0)
+
+    def test_one_cow(self):
+        """One digit present but wrong position."""
+        assert calculate_bulls_cows("1234", "5617") == (0, 1)
+
+    def test_edge_case(self):
+        """Edge cases with zeros."""
+        assert calculate_bulls_cows("1023", "3210") == (0, 4)
+        assert calculate_bulls_cows("9012", "2109") == (0, 4)
