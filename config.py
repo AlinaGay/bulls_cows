@@ -12,3 +12,5 @@ BASE_URL = os.getenv("API_BASE_URL")
 MODEL = os.getenv("MODEL")
 MAX_ATTEMPTS = 10
 DIGITS_OF_NUMBER = 4
+MAX_TOKENS = os.getenv("MAX_TOKENS")
+TEMPERATURE = os.getenv("TEMPERATURE")

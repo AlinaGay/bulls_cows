@@ -1,9 +1,10 @@
 # player.py
 """Player class for Bulls and Cows game."""
 
+from config import MODEL, YANDEX_FOLDER_ID
 from client import client
 from loguru import logger
-from config import MODEL, YANDEX_FOLDER_ID
+from prompts import COUNT_BULLS_COWS
 from utils import parse_response
 
 
@@ -65,25 +66,7 @@ class Player:
             "Роль: ЗАГАДЫВАЮЩИЙ — ОЦЕНИТЬ ПОПЫТКУ\n\n"
             f"Твоё загаданное число: {secret}\n"
             f"Попытка соперника: {guess}\n\n"
-            "Когда тебе дают попытку соперника для оценки:\n"
-            "1. Сравни попытку с твоим загаданным числом\n"
-            "2. Посчитай быков (цифра на правильном месте)\n"
-            "3. Посчитай коров (цифра есть, но на другом месте)\n\n"
-
-            "Как считать:\n"
-            "- Сначала найди все точные совпадения (позиция И цифра) = быки\n"
-            "- Затем среди оставшихся найди цифры, "
-            "которые есть в числе = коровы\n"
-            "- Одна цифра не может быть одновременно быком и коровой\n\n"
-            "Пример:\n"
-            "Загадано: 1234, Попытка: 1325\n"
-            "- Позиция 1: 1=1 → БЫК\n"
-            "- Позиция 2: 2≠3, но 3 есть в 1234 → КОРОВА\n"
-            "- Позиция 3: 3≠2, но 2 есть в 1234 → КОРОВА\n"
-            "- Позиция 4: 4≠5, и 5 нет в 1234 → ничего\n"
-            "Результат: 1 бык, 2 коровы\n\n"
-            "Теперь посчитай для своих чисел."
-        )
+            + COUNT_BULLS_COWS)
         if not response:
             raise ValueError("Empty response from agent")
         data = parse_response(response)

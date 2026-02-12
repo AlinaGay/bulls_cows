@@ -61,7 +61,7 @@ def parse_response(response_text: str) -> dict:
 
     try:
         result = json.loads(text)
-        logger.debug(f"JSON успешно распарсен: {result}")
+        logger.debug(f"Парсинг JSON успешно завершен: {result}")
         return result
     except json.JSONDecodeError as error:
         logger.error(f"Ошибка парсинга JSON: {error}")
