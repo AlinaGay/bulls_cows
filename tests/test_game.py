@@ -33,6 +33,7 @@ class TestGameInit:
 
         assert game.max_attempts == 5
 
+
 class TestGamePlay:
     """Tests for Game.play method."""
 
