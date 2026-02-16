@@ -93,7 +93,7 @@ class TestGamePlay:
         """Invalid secret should be replaced with generated number."""
         codemaker = MagicMock(spec=Player)
         codemaker.name = "Maker"
-        codemaker.make_secret.return_value = "1123"  # Invalid: repeating digits
+        codemaker.make_secret.return_value = "1123"
         codemaker.count_bulls_cows.return_value = (4, 0)
 
         codebreaker = MagicMock(spec=Player)
@@ -116,13 +116,11 @@ class TestGamePlay:
 
         codebreaker = MagicMock(spec=Player)
         codebreaker.name = "Breaker"
-        codebreaker.make_guess.side_effect = ["1123", "0123", "1234"]  # First two invalid
-
+        codebreaker.make_guess.side_effect = ["1123", "0123", "1234"]
         game = Game(codemaker, codebreaker)
         result = game.play()
 
         assert result["winner"] == "Breaker"
-        # Only valid guesses count
         assert len(result["history"]) == 1
 
     def test_history_recorded(self):
@@ -149,7 +147,7 @@ class TestGamePlay:
         codemaker = MagicMock(spec=Player)
         codemaker.name = "Maker"
         codemaker.make_secret.return_value = "1234"
-        codemaker.count_bulls_cows.return_value = (1, 1)  # Wrong!
+        codemaker.count_bulls_cows.return_value = (1, 1)
 
         codebreaker = MagicMock(spec=Player)
         codebreaker.name = "Breaker"
@@ -158,6 +156,5 @@ class TestGamePlay:
         game = Game(codemaker, codebreaker)
         result = game.play()
 
-        # Engine should calculate (0, 0) for 5678 vs 1234
         assert result["history"][0]["bulls"] == 0
         assert result["history"][0]["cows"] == 0
