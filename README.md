@@ -1,33 +1,34 @@
-# Быки и Коровы: AI vs AI
+# Bulls and Cows: AI vs AI
 
-Реализация классической игры "Быки и Коровы", где два AI-агента на базе YandexGPT играют друг против друга.
+Implementation of the classic "Bulls and Cows" game where two AI agents powered by YandexGPT play against each other.
 
-## Описание
+## Description
 
-Программа проводит турнир из двух раундов между AI-агентами:
-- **Раунд 1:** Player_1 загадывает число, Player_2 отгадывает
-- **Раунд 2:** Player_2 загадывает число, Player_1 отгадывает
+The program runs a two-round tournament between AI agents:
 
-Каждый агент использует свою стратегию отгадывания. Побеждает тот, кто угадал число за меньшее количество ходов.
+- ** Round 1: Player_1 picks a number, Player_2 guesses
+- ** Round 2: Player_2 picks a number, Player_1 guesses
 
-## Правила игры
+Each agent uses its own guessing strategy. The winner is the one who guesses the number in fewer attempts.
 
-- Загадывается 4-значное число с неповторяющимися цифрами (1023-9876)
-- Первая цифра не может быть 0
-- **Бык** — цифра угадана и стоит на правильной позиции
-- **Корова** — цифра есть в числе, но на другой позиции
-- **Победа** — 4 быка (число угадано полностью)
-- Максимум 10 попыток на раунд
+## Game Rules
 
-## Установка
+- A 4-digit number with unique digits is chosen (1023-9876)
+- First digit cannot be 0
+- **Bull** — digit is guessed and in the correct position
+- **Cow** — digit exists in the number but in a different position
+- **Win** — 4 bulls (number fully guessed)
+- Maximum 10 attempts per round
 
-### 1. Клонирование репозитория
+## Installation
+
+### 1. Clone the repository
 ```bash
 git clone https://github.com/username/bulls_cows.git
 cd bulls_cows
 ```
 
-### 2. Создание виртуального окружения
+### 2. Create virtual environment
 ```bash
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
@@ -35,14 +36,14 @@ source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
 ```
 
-### 3. Установка зависимостей
+### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Настройка переменных окружения
+### 4. Configure environment variables
 
-Создайте файл `.env` в корне проекта:
+Create a `.env` file in the project root:
 ```env
 YANDEX_FOLDER_ID=ваш_folder_id
 YANDEX_API_KEY=ваш_api_key
@@ -50,106 +51,106 @@ API_BASE_URL=https://llm.api.cloud.yandex.net/v1
 MODEL=yandexgpt-lite/rc
 ```
 
-## Запуск
+## Running
 ```bash
 python main.py
 ```
 
-## Структура проекта
+## Project Structure
 ```
 bulls_cows/
-├── main.py              # Точка входа
-├── game.py              # Логика игры и раунда
-├── player.py            # Класс игрока (взаимодействие с API)
-├── prompts.py           # Системные промпты и стратегии
-├── utils.py             # Вспомогательные функции
-├── config.py            # Конфигурация
-├── client.py            # OpenAI клиент для Yandex API
-├── logging_config.py    # Настройка логирования
-├── requirements.txt     # Зависимости
-├── .env                 # Переменные окружения (не в git)
-├── logs/                # Логи игр
+├── main.py              # Entry point
+├── game.py              # Game and round logic
+├── player.py            # Player class (API interaction)
+├── prompts.py           # System prompts and strategies
+├── utils.py             # Helper functions
+├── config.py            # Configuration
+├── client.py            # OpenAI client for Yandex API
+├── logging_config.py    # Logging configuration
+├── requirements.txt     # Dependencies
+├── .env                 # Environment variables (not in git)
+├── logs/                # Game logs
 └── README.md
 ```
 
-## Стратегии агентов
+## Agent Strategies
 
-### Player_1: Быстрое сканирование
+### Player_1: Fast Scanning
 
-1. **Фаза сканирования:** первые ходы — 1234, затем 5678
-2. **Фаза определения:** по сумме быков и коров определяет "активные" цифры
-3. **Фаза перестановок:** переставляет найденные цифры до победы
+1. **Scanning phase:** first moves — 1234, then 5678
+2. **Identification phase:** determines "active" digits by sum of bulls and cows
+3. **Permutation phase:** rearranges found digits until victory
 
-### Player_2: Логическая дедукция
+### Player_2: Logical Deduction
 
-1. **Анализ результатов:** исключает невозможные цифры
-2. **Логика позиционирования:** фиксирует быков, перемещает коров
-3. **Комбинирование:** использует информацию из ВСЕХ предыдущих попыток
+1. **Result analysis:** eliminates impossible digits
+2. **Positioning logic:** locks bulls, moves cows
+3. **Combining:** uses information from ALL previous attempts
 
-## Архитектура
+## Architecture
 
-### Разделение ответственности
+### Separation of Concerns
 
-| Компонент | Ответственность |
-|-----------|-----------------|
-| `Game` | Управление раундом, валидация, подсчёт результата |
-| `Player` | Взаимодействие с API, генерация ходов |
-| `utils` | Валидация чисел, расчёт быков/коров, парсинг JSON |
-| `prompts` | Системные промпты и стратегии |
+| Component | Responsibility |
+|-----------|----------------|
+| `Game` | Round management, validation, result calculation |
+| `Player` | API interaction, move generation |
+| `utils` | Number validation, bulls/cows calculation, JSON parsing |
+| `prompts` | System prompts and strategies |
 
-### Валидация и надёжность
+### Validation and Reliability
 
-- **Двойная проверка:** агент считает быков/коров, движок проверяет
-- **Fallback:** при невалидном числе генерируется случайное
-- **Парсинг:** обрабатывает markdown-блоки и некорректный JSON
+- **Double-check:** agent calculates bulls/cows, engine verifies
+- **Fallback:** generates random number if invalid
+- **Parsing:** handles markdown blocks and malformed JSON
 
-## Логирование
+## Logging
 
-Логи сохраняются в папку `logs/` с именем `game_YYYY-MM-DD_HH-mm-ss.txt`.
+Logs are saved to the `logs/` folder with the name `game_YYYY-MM-DD_HH-mm-ss.txt`.
 
-### Пример лога
+### Log Example
 ```
 2026-02-10 12:30:45 | ==================================================
-2026-02-10 12:30:45 | БЫКИ И КОРОВЫ: AI vs AI
+2026-02-10 12:30:45 | BULLS AND COWS: AI vs AI
 2026-02-10 12:30:45 | ==================================================
 2026-02-10 12:30:45 | 
-2026-02-10 12:30:45 | РАУНД 1: Player_1 загадывает, Player_2 угадывает
-2026-02-10 12:30:46 | Player_1 загадал число: 3814
-2026-02-10 12:30:47 | Ход 1: 1234 → 1Б 2К
-2026-02-10 12:30:48 | Ход 2: 4312 → 1Б 2К
-2026-02-10 12:30:49 | Ход 3: 3142 → 1Б 2К
-2026-02-10 12:30:50 | Ход 4: 3814 → 4Б 0К
-2026-02-10 12:30:50 | Player_2 угадал за 4 ходов!
+2026-02-10 12:30:45 | ROUND 1: Player_1 picks, Player_2 guesses
+2026-02-10 12:30:46 | Player_1 picked number: 3814
+2026-02-10 12:30:47 | Move 1: 1234 → 1B 2C
+2026-02-10 12:30:48 | Move 2: 4312 → 1B 2C
+2026-02-10 12:30:49 | Move 3: 3142 → 1B 2C
+2026-02-10 12:30:50 | Move 4: 3814 → 4B 0C
+2026-02-10 12:30:50 | Player_2 guessed in 4 moves!
 2026-02-10 12:30:50 | 
-2026-02-10 12:30:50 | РАУНД 2: Player_2 загадывает, Player_1 угадывает
-2026-02-10 12:30:51 | Player_2 загадал число: 5672
-2026-02-10 12:30:52 | Ход 1: 1234 → 0Б 1К
-2026-02-10 12:30:53 | Ход 2: 5678 → 2Б 1К
-2026-02-10 12:30:54 | Ход 3: 5672 → 4Б 0К
-2026-02-10 12:30:54 | Player_1 угадал за 3 ходов!
+2026-02-10 12:30:50 | ROUND 2: Player_2 picks, Player_1 guesses
+2026-02-10 12:30:51 | Player_2 picked number: 5672
+2026-02-10 12:30:52 | Move 1: 1234 → 0B 1C
+2026-02-10 12:30:53 | Move 2: 5678 → 2B 1C
+2026-02-10 12:30:54 | Move 3: 5672 → 4B 0C
+2026-02-10 12:30:54 | Player_1 guessed in 3 moves!
 2026-02-10 12:30:54 | 
 2026-02-10 12:30:54 | ========================================
-2026-02-10 12:30:54 | ИТОГИ
+2026-02-10 12:30:54 | RESULTS
 2026-02-10 12:30:54 | ========================================
-2026-02-10 12:30:54 | Раунд 1: 4 ходов
-2026-02-10 12:30:54 | Раунд 2: 3 ходов
-2026-02-10 12:30:54 | Победитель: Player_1
-2026-02-10 12:30:54 | Игра завершена
+2026-02-10 12:30:54 | Round 1: 4 moves
+2026-02-10 12:30:54 | Round 2: 3 moves
+2026-02-10 12:30:54 | Winner: Player_1
+2026-02-10 12:30:54 | Game finished
 ```
 
-## Технический стек
+## Tech Stack
 
 - **Python** 3.12+
-- **OpenAI SDK** — взаимодействие с Yandex AI Studio API
-- **Loguru** — логирование
-- **python-dotenv** — переменные окружения
+- **OpenAI SDK** — Yandex AI Studio API interaction
+- **Loguru** —  logging
+- **python-dotenv** — environment variables
 
 ## Известные особенности
 
-1. **Ошибки подсчёта агентом:** LLM иногда неправильно считает быков/коров — движок всегда проверяет и исправляет
-2. **Повторяющиеся ходы:** агент может повторять попытки, несмотря на инструкции в промпте
-3. **Температура 0.5:** баланс между креативностью и стабильностью
+1. **Agent miscounting**: LLM sometimes miscalculates bulls/cows — engine always verifies and corrects
+2. **Repeated moves**: agent may repeat attempts despite prompt instructions
+3. **Temperature 0.5:** balance between creativity and stability
 
-## Лицензия
+## License
 
 MIT
